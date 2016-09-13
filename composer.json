@@ -1,7 +1,29 @@
 {
   "name": "enverido/php",
   "description": "The official PHP library for enverido.com.",
+  "version": "1.0.0-dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "Name": "Cogative LTD",
+      "email": "support@cogative.com",
+      "homepage": "http://www.cogative.com",
+      "role": "Developer"
+    }
+  ],
+  "keywords": [
+    "enverido",
+    "licensing",
+    "php licensing"
+  ],
+  "homepage": "https://www.enverido.com",
+  "support": {
+    "email": "help@enverido.com",
+    "docs": "https://docs.cogative.com/display/ENVD"
+  },
   "require": {
-    "php": "^5.5.9 || ^7.0"
+    "php": "^5.5.9 || ^7.0",
+    "phpseclib/phpseclib": "2.0.*",
+    "guzzlehttp/guzzle": "6.2.*"
   }
 }
