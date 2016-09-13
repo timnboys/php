@@ -2,6 +2,6 @@
   "name": "enverido/php",
   "description": "The official PHP library for enverido.com.",
   "require": {
-    "php": "^5.5.9 || ^7.0",
+    "php": "^5.5.9 || ^7.0"
   }
 }
