@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-class VerifyTest extends TestCase {
+class LicenceTest extends TestCase {
 
     public function testVerify() {
         $config = new \Dotenv\Dotenv(__DIR__);
@@ -12,8 +12,7 @@ class VerifyTest extends TestCase {
 
         $product = new \Enverido\API\Product(getenv('PRODUCT_ID'), $api);
 
-        $licence = new \Enverido\API\Licence($api, $product);
-        $licence->setId(getenv('LICENCE_ID'));
+        $licence = new \Enverido\API\Licence(getenv('LICENCE_ID'), $api, $product);
 
         $this->assertTrue($licence->verify(getenv('EMAIL'), getenv('IP'), null, 'blabla', getenv('PUBLIC_KEY')));
     }

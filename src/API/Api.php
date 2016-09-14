@@ -40,6 +40,18 @@ class Api
     }
 
     /**
+     * Generate a random token to verify that the response is from the real enverido server. This token
+     * is sent with some requests. The enverido server signs this token with the product's private key,
+     * and returns a signed version. We can check this signature is genuine using the product's public key.
+     *
+     * @return string Generated token
+     */
+
+    public function generateToken() {
+        return uniqid();
+    }
+
+    /**
      * Make a GET API request
      * @param $uri String endpoint to request (eg: /product/1)
      * @param $params array Array of form parameters

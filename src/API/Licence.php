@@ -10,19 +10,20 @@ use phpseclib\Crypt\RSA;
 
 class Licence implements ApiResource
 {
-
-    /**
-     * Licence object from the API
-     *
-     * @param Api $api
-     * @param Product $product
-     */
-
     protected $product;
     protected $id;
     protected $api;
 
-    public function __construct(Api $api, Product $product) {
+    /**
+     * Licence object from the API
+     *
+     * @param int $id
+     * @param Api $api
+     * @param Product $product
+     */
+
+    public function __construct($id, Api $api, Product $product) {
+        $this->id = $id;
         $this->api = $api;
         $this->product = $product;
     }
@@ -31,11 +32,12 @@ class Licence implements ApiResource
      * Verify the licence using the details given. These should be as accurate as possible and not
      * provided by the user (with the exception of the email address)
      *
-     * @param $email string Licence holder email address
-     * @param null $ip string Licensed IP address - only required if the product ties licences to IPs
-     * @param null $domain string Licensed domain name - only required if the product ties licences to domains
-     * @param $token string A random token to prevent spoofing
-     * @param $publicKey Product's public key used to verify responses from enverido
+     * @param string $email Licence holder email address
+     * @param string $ip Licensed IP address - only required if the product ties licences to IPs
+     * @param string $domain Licensed domain name - only required if the product ties licences to domains
+     * @param string $token A random token to prevent spoofing
+     * @param string $publicKey Product's public key used to verify responses from enverido
+     *
      * @return bool Whether or not licence is valid
      */
 

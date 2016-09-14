@@ -14,7 +14,7 @@ class Product implements ApiResource
 
     /**
      * Product constructor.
-     * @param string $id
+     * @param int $id
      * @param Api $api
      */
 
