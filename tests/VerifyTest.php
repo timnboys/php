@@ -17,5 +17,4 @@ class VerifyTest extends TestCase {
 
         $this->assertTrue($licence->verify(getenv('EMAIL'), getenv('IP'), null, 'blabla', getenv('PUBLIC_KEY')));
     }
-
 }
