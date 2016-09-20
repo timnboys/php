@@ -11,6 +11,10 @@ To install using composer, simply:
 
 `composer require enverido/php`
 
+## Documentation
+For instructions on this library's use, read the official
+documentation found [here](https://docs.cogative.com/display/ENVD/PHP).
+
 ## Testing
 When executing tests, you need to add a .env  file to your tests directory. You may use the .env.example file in the same
 directory as an example of the values to enter. These values must be valid at enverido.com for tests to pass as expected.
