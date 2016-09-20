@@ -94,6 +94,9 @@ class VerifierTest extends TestCase
         $config = new \Dotenv\Dotenv(__DIR__);
         $config->load();
 
+        // This should throw a 404 error wrapped in a ClientException, since the licence shouldn't exist
+        $this->expectException(\GuzzleHttp\Exception\ClientException::class);
+
         // New verifier instance
         $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
 
