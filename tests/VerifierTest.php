@@ -19,10 +19,29 @@ class VerifierTest extends TestCase
         $config->load();
 
         // New verifier instance
-        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
 
         // Check if licence is verified using known valid licence details
-        $verified = $verifier->verifyLicence(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
+        $verified = $verifier->verifyLicenceViaId(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
+            null, getenv('PUBLIC_KEY'));
+
+        $this->assertTrue($verified);
+    }
+
+    /**
+     * Test that licence a licence can be verified using only its shortcode
+     */
+
+    public function testVerifyLicenceViaShortcode() {
+        // Load configuration from .env
+        $config = new \Dotenv\Dotenv(__DIR__);
+        $config->load();
+
+        // New verifier instance
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
+
+        // Check if licence is verified using known valid licence details
+        $verified = $verifier->verifyLicenceViaShortcode(getenv('LICENCE_SHORTCODE'), getenv('EMAIL'), getenv('IP'),
             null, getenv('PUBLIC_KEY'));
 
         $this->assertTrue($verified);
@@ -38,10 +57,10 @@ class VerifierTest extends TestCase
         $config->load();
 
         // New verifier instance
-        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
 
         // Check if licence is verified using known valid licence details
-        $verified = $verifier->verifyLicence(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), 'yaya@ya.com', getenv('IP'),
+        $verified = $verifier->verifyLicenceViaId(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), 'yaya@ya.com', getenv('IP'),
             null, getenv('PUBLIC_KEY'));
 
         $this->assertNotTrue($verified);
@@ -57,10 +76,10 @@ class VerifierTest extends TestCase
         $config->load();
 
         // New verifier instance
-        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
 
         // Check if licence is verified using known valid licence details
-        $verified = $verifier->verifyLicence(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), '10.0.0.1',
+        $verified = $verifier->verifyLicenceViaId(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), '10.0.0.1',
             null, getenv('PUBLIC_KEY'));
 
         $this->assertNotTrue($verified);
@@ -76,10 +95,10 @@ class VerifierTest extends TestCase
         $config->load();
 
         // New verifier instance
-        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
 
         // Check if licence is verified using known valid licence details
-        $verified = $verifier->verifyLicence(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
+        $verified = $verifier->verifyLicenceViaId(getenv('LICENCE_ID'), getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
             null, 'publickey');
 
         $this->assertNotTrue($verified);
@@ -98,10 +117,10 @@ class VerifierTest extends TestCase
         $this->expectException(\GuzzleHttp\Exception\ClientException::class);
 
         // New verifier instance
-        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'), getenv('API_KEY'));
+        $verifier = new \Enverido\Verifier(getenv('ORGANISATION'));
 
         // Check if licence is verified using known valid licence details
-        $verified = $verifier->verifyLicence(44, getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
+        $verified = $verifier->verifyLicenceViaId(44, getenv('PRODUCT_ID'), getenv('EMAIL'), getenv('IP'),
             null, getenv('PUBLIC_KEY'));
 
         $this->assertNotTrue($verified);

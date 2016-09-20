@@ -21,15 +21,12 @@ class Verifier
      * Create a new verifier object
      *
      * @param string $organisation Organisation as listed under your enverido account
-     * @param string $apiKey API key as listed under your enverido account
      */
 
-    public function __construct($organisation, $apiKey)
+    public function __construct($organisation)
     {
-        $this->apiKey = $apiKey;
         $this->organisation = $organisation;
-
-        $this->api = new Api($organisation, $apiKey);
+        $this->api = new Api($organisation, null);
     }
 
     /**
@@ -49,9 +46,37 @@ class Verifier
      * @return bool Whether or not the licence is valid
      */
 
-    public function verifyLicence($licenceId, $productId, $email, $ip=null, $domain=null, $publicKey) {
+    public function verifyLicenceViaId($licenceId, $productId, $email, $ip=null, $domain=null, $publicKey) {
         $product = new Product($productId, $this->api);
         $licence = new Licence($licenceId, $this->api, $product);
+
+        return $licence->verify($email, isset($ip) ? $ip : null, isset($domain) ? $domain : null,
+            $this->api->generateToken(), $publicKey);
+    }
+
+    /**
+     * Check that a licence is valid for the provided domain name / ip address using its shortcode. This method
+     * will ensure that the licence hasn't expired, been suspended and that the response comes from a genuine
+     * enverido licence server.
+     *
+     * @param string $shortcode
+     * @param string $email
+     * @param string null $ip
+     * @param string null $domain
+     * @param string $publicKey
+     *
+     * @return bool Whether or not the licence is valid
+     */
+
+    public function verifyLicenceViaShortcode($shortcode, $email, $ip=null, $domain=null, $publicKey) {
+        // Lookup the licence's information using its shortcode
+        $lookup = new Lookup($this->organisation);
+        /**
+         * @var \stdClass $info
+         */
+        $info = $lookup->lookup($shortcode);
+
+        $licence = new Licence($info->licence_id, $this->api, new Product($info->product_id, $this->api));
 
         return $licence->verify($email, isset($ip) ? $ip : null, isset($domain) ? $domain : null,
             $this->api->generateToken(), $publicKey);
