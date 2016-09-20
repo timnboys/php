@@ -13,6 +13,9 @@ require_once dirname(__FILE__) . '/../../vendor/autoload.php';
 
 class Api
 {
+    /**
+     * @var Client $client
+     */
     protected $client;
     protected $organisation;
 
@@ -66,16 +69,35 @@ class Api
     }
 
     /**
-     * Make a GET API request
-     * @param $uri String endpoint to request (eg: /product/1)
-     * @param $params array Array of form parameters
+     * Make a GET API request to the API
      *
-     * @return string JSON response from API
+     * @param $uri String endpoint to request (eg: /product/1)
+     * @param $params array Array of query parameters
+     *
+     * @return \stdClass JSON response from API
      */
 
     public function get($uri, $params) {
         $request = $this->client->request('GET', $uri, [
             'query' => $params
+        ]);
+
+        $this->lastResponse = $request;
+
+        return json_decode($request->getBody());
+    }
+
+    /**
+     * Send a POST request to the API
+     *
+     * @param string $uri URI to request
+     * @param array $params Array of form parameters (key => value)
+     * @return \stdClass JSON response from API
+     */
+
+    public function post($uri, $params) {
+        $request = $this->client->request('POST', $uri, [
+            'form_params' => $params
         ]);
 
         $this->lastResponse = $request;
