@@ -115,4 +115,25 @@ class Licence implements ApiResource
         // TODO: Implement update() method.
         return false;
     }
+
+    /**
+     * Activate the licence. Does not require an API key to do so. This will set the licence's issued
+     * property to be true.
+     *
+     * @param string $email Email address of the licence holder. Required for activation
+     * @return bool Whether or not the licence has been activated
+     */
+
+    public function activate($email) {
+        $response = $this->api->post('/activate', [
+            'licence' => $this->getId(),
+            'email' => $email
+        ]);
+
+        if($response->issued) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
