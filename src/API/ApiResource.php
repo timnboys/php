@@ -22,4 +22,14 @@ interface ApiResource
      */
 
     public function setId($id);
+
+    /**
+     * Update the resource at the enverido licence server. This requires a valid API
+     * key to have been set. The properties set in the instance of the object are used
+     * as the values to send to the licence server.
+     *
+     * @return boolean Returns true if update was successful
+     */
+
+    public function update();
 }
