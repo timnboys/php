@@ -105,6 +105,20 @@ class Api
         return json_decode($request->getBody());
     }
 
+    /**
+     * Send a DELETE request to the API
+     *
+     * @param string $uri URI to call
+     * @return \stdClass JSON response from API
+     */
+
+    public function delete($uri) {
+        $request = $this->client->request('DELETE', $uri);
+
+        $this->lastResponse = $request;
+        return json_decode($request->getBody());
+    }
+
     public function getLastResponse() {
         return $this->lastResponse;
     }

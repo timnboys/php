@@ -10,9 +10,22 @@ use phpseclib\Crypt\RSA;
 
 class Licence implements ApiResource
 {
-    protected $product;
     protected $id;
     protected $api;
+    protected $product;
+
+    protected $shortCode;
+    protected $email;
+    protected $domain;
+    protected $ip;
+
+    protected $expiryTimestamp;
+
+    protected $suspended;
+    protected $issued;
+
+    protected $signature;
+    protected $expirySignature;
 
     /**
      * Licence object from the API
@@ -26,6 +39,25 @@ class Licence implements ApiResource
         $this->id = $id;
         $this->api = $api;
         $this->product = $product;
+
+        // Get licence info as long as the API key is present
+        if($this->api->authenticated() && $this->id != null) {
+            /**
+             * @var \stdClass $info
+             */
+            $info = $this->api->get('/product/'.$product->getId().'/licence/'.$this->getId(), null);
+
+            $this->email = $info->email;
+            $this->shortCode = $info->short_code;
+            $this->signature = $info->signature;
+            $this->expirySignature = $info->expiry_signature;
+            $this->expiryTimestamp = $info->expiry_timestamp;
+            $this->suspended = $info->suspended;
+            $this->issued = $info->issued;
+
+            $this->ip = $info->ip;
+            $this->domain = $info->domain;
+        }
     }
 
     /**
@@ -117,6 +149,30 @@ class Licence implements ApiResource
     }
 
     /**
+     * Delete this licence. This is an irreversible change.
+     * Here be dragons!
+     *
+     * Requires an API key to be set.
+     *
+     * @return bool
+     */
+
+    public function delete() {
+        // If no API key is set this is going to fail anyway, so we might as well get it
+        // over with now!
+        if(!$this->api->authenticated()) {
+            return false;
+        }
+
+        $response = $this->api->delete('/product/'.$this->product->getId().'/licence/'.$this->getId());
+        if(property_exists($response, 'deleted')) {
+            return $response->deleted;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Activate the licence. Does not require an API key to do so. This will set the licence's issued
      * property to be true.
      *
@@ -136,4 +192,175 @@ class Licence implements ApiResource
             return false;
         }
     }
+
+    /**
+     * @return Product
+     */
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    /**
+     * @param Product $product
+     */
+    public function setProduct($product)
+    {
+        $this->product = $product;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShortCode()
+    {
+        return $this->shortCode;
+    }
+
+    /**
+     * @param mixed $shortCode
+     */
+    public function setShortCode($shortCode)
+    {
+        $this->shortCode = $shortCode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param mixed $domain
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * @param mixed $ip
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpiryTimestamp()
+    {
+        return $this->expiryTimestamp;
+    }
+
+    /**
+     * @param mixed $expiryTimestamp
+     */
+    public function setExpiryTimestamp($expiryTimestamp)
+    {
+        $this->expiryTimestamp = $expiryTimestamp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSuspended()
+    {
+        return $this->suspended;
+    }
+
+    /**
+     * @param mixed $suspended
+     */
+    public function setSuspended($suspended)
+    {
+        $this->suspended = $suspended;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIssued()
+    {
+        return $this->issued;
+    }
+
+    /**
+     * @param mixed $issued
+     */
+    public function setIssued($issued)
+    {
+        $this->issued = $issued;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSignature()
+    {
+        return $this->signature;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getExpirySignature()
+    {
+        return $this->expirySignature;
+    }
+
+    /**
+     * Create a licence using the information provided on this object.
+     *
+     * @param IssuingAuthority $authority The issuing authority used to generate the licence
+     * @return \stdClass
+     *
+     * @see https://docs.cogative.com/pages/viewpage.action?pageId=1409441#id-/licence-POST
+     */
+
+    public function create(IssuingAuthority $authority) {
+        $request = $this->api->post('/product/'.$this->getProduct()->getId().'/licence', [
+            'email' => $this->getEmail(),
+            'expiry' => $this->getExpiryTimestamp(),
+            'domain' => $this->getDomain(),
+            'ip' => $this->getIp(),
+            'authority' => $authority->getId()
+        ]);
+
+        $this->setShortCode($request->short_code);
+        $this->setId($request->id);
+
+        // Will return the response from the licence server, this will include info like the licence ID,
+        // licence signature, licence expiry signature
+        return $request;
+    }
+
 }
