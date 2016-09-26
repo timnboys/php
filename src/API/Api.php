@@ -106,6 +106,24 @@ class Api
     }
 
     /**
+     * Send a PATCH request to the API
+     *
+     * @param string $uri URI to request
+     * @param array $params Array of form parameters (key => value)
+     * @return \stdClass JSON response from API
+     */
+
+    public function patch($uri, $params) {
+        $request = $this->client->request('PATCH', $uri, [
+            'form_params' => $params
+        ]);
+
+        $this->lastResponse = $request;
+
+        return json_decode($request->getBody());
+    }
+    
+    /**
      * Send a DELETE request to the API
      *
      * @param string $uri URI to call
