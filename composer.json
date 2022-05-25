@@ -24,7 +24,7 @@
   "require": {
     "php": "^5.5.9 || ^7.0",
     "phpseclib/phpseclib": "2.0.*",
-    "guzzlehttp/guzzle": "6.2.*"
+    "guzzlehttp/guzzle": "6.5.*"
   },
   "require-dev": {
     "psy/psysh": "@stable",
